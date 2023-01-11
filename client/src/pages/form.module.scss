@@ -1,0 +1,52 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: auto;
+  gap: 1rem;
+  font-size: 1.3rem;
+  padding: 1rem;
+  background-color: darkseagreen;
+  border-radius: 0.5rem;
+  @media screen and (max-width: 400px) {
+    width: 100%;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+  .form-control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: auto;
+
+    input {
+      padding: 0.5rem 1rem;
+      border: none;
+      outline: none;
+      border-radius: 0.5rem;
+      align-self: stretch;
+    }
+  }
+  .buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    button {
+      padding: 0.5rem 2rem;
+      border-radius: 0.5rem;
+      -webkit-border-radius: 0.5rem;
+      -moz-border-radius: 0.5rem;
+      -ms-border-radius: 0.5rem;
+      -o-border-radius: 0.5rem;
+      border: 2px solid;
+
+      &[type="reset"] {
+        border-color: red;
+      }
+      &[type="submit"] {
+        border-color: green;
+      }
+    }
+  }
+}

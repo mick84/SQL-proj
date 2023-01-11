@@ -1,0 +1,19 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: large;
+  font-weight: bold;
+  border-bottom: 2px solid gray;
+  padding: 1rem;
+  .logo {
+    font-weight: bold;
+  }
+  a {
+    text-decoration: none;
+  }
+  .auth {
+    display: flex;
+    gap: 2rem;
+  }
+}
