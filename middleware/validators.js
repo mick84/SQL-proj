@@ -16,12 +16,28 @@ const leadUpdateRules = {
   event_date: ["string"],
   email: ["string"],
   location: ["string"],
-  leadStatus: ["number"],
 };
-export const authValidator = (body) => make().setData(body).setRules(authRules);
-export const leadValidator = (body) => make().setData(body).setRules(leadRules);
-export const leadUpdateValidator = (body) =>
+const leadStatusRules = {
+  status_id: ["required"],
+  status_name: ["required", "string"],
+};
+
+const authValidator = (body) => make().setData(body).setRules(authRules);
+const leadValidator = (body) => make().setData(body).setRules(leadRules);
+const leadStatusValidator = (body) =>
+  make().setData(body).setRules(leadStatusRules);
+const leadUpdateValidator = (body) =>
   make().setData(body).setRules(leadUpdateRules);
+
+export const validateLeadStatus = (req, res, next) => {
+  const validator = leadStatusValidator(req.body);
+  if (!validator.validate()) {
+    const errorsObj = validator.errors().all();
+    const message = Object.values(errorsObj).flat().join("\n");
+    return res.status(400).send(message);
+  }
+  next();
+};
 export const validateAuthBody = (req, res, next) => {
   const validator = authValidator(req.body);
   if (!validator.validate()) {

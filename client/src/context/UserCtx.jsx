@@ -1,5 +1,4 @@
-import { useReducer } from "react";
-import { useEffect, useContext, createContext } from "react";
+import { useEffect, useContext, createContext, useReducer } from "react";
 const ctx = createContext();
 export const useAuth = () => useContext(ctx);
 export const ACTIONS = {
@@ -10,14 +9,13 @@ export const ACTIONS = {
 const reducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.REGISTER:
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      sessionStorage.setItem("user", JSON.stringify(action.payload));
       return { ...state, user: action.payload };
     case ACTIONS.LOGIN:
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      sessionStorage.setItem("user", JSON.stringify(action.payload));
       return { ...state, user: action.payload };
-
     case ACTIONS.LOGOUT:
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("user");
       return { ...state, user: null };
 
     default:
@@ -29,8 +27,9 @@ export const AuthProvider = ({ children }) => {
   const initialState = {
     loading: false,
     error: null,
-    token: "",
+    user: null,
   };
+  const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     //on page reload: persist logged user, if exists:
     const userStr = sessionStorage.getItem("user");
@@ -38,6 +37,6 @@ export const AuthProvider = ({ children }) => {
     const user = JSON.parse(userStr);
     dispatch({ type: ACTIONS.LOGIN, payload: user });
   }, []);
-  const [state, dispatch] = useReducer(reducer, initialState);
+
   return <ctx.Provider value={{ state, dispatch }}>{children}</ctx.Provider>;
 };

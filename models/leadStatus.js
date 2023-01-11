@@ -11,5 +11,5 @@ LeadStatus.init(
       collate: "utf8_unicode_ci",
     },
   },
-  { sequelize, modelName: "LeadStatus" }
+  { sequelize, modelName: "LeadStatus", timestamps: false }
 );

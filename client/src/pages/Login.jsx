@@ -1,7 +1,7 @@
 import style from "./page.module.scss";
 import form from "./form.module.scss";
 import { useState, useCallback } from "react";
-import { useAuth } from "../context/UserCtx";
+import { ACTIONS, useAuth } from "../context/UserCtx";
 import { API } from "../misc/api";
 export const Login = (props) => {
   const initialInputs = {
@@ -15,13 +15,14 @@ export const Login = (props) => {
       e.preventDefault();
 
       try {
-        const { data } = await API.post("/auth/login", inputs);
-        console.log(data);
+        const { data: payload } = await API.post("/auth/login", inputs);
+        console.log(payload);
+        dispatch({ type: ACTIONS.LOGIN, payload });
       } catch (error) {
         console.log(error.response.data || error.message);
       }
     },
-    [inputs]
+    [dispatch, inputs]
   );
 
   const cleanInputs = () => setInputs(() => initialInputs);

@@ -12,6 +12,17 @@
   a {
     text-decoration: none;
   }
+  button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    -webkit-border-radius: 0.5rem;
+    -moz-border-radius: 0.5rem;
+    -ms-border-radius: 0.5rem;
+    -o-border-radius: 0.5rem;
+    border: transparent;
+    background-color: rgb(90, 5, 5);
+    color: white;
+  }
   .auth {
     display: flex;
     gap: 2rem;

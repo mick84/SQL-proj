@@ -33,5 +33,5 @@ Lead.init(
       defaultValue: 1,
     },
   },
-  { sequelize, modelName: "Lead" }
+  { sequelize, modelName: "Lead", timestamps: false }
 );

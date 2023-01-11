@@ -1,0 +1,17 @@
+.btn {
+  border-radius: 0.5rem;
+  border: 2px solid;
+  font-size: 3rem;
+  &[type="submit"] {
+    border-color: green;
+    color: green;
+  }
+  &[type="reset"] {
+    border-color: red;
+    color: red;
+  }
+  &[type="button"] {
+    border-color: lightblue;
+    color: lightblue;
+  }
+}

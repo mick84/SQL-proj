@@ -1,5 +1,6 @@
 import style from "./page.module.scss";
 import form from "./form.module.scss";
+import { useNavigate } from "react-router-dom";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { useState, useCallback } from "react";
 import { API } from "../misc/api";
@@ -11,19 +12,20 @@ export const Register = (props) => {
     repeatPassword: "",
   };
   const { state, dispatch } = useAuth();
+  const goto = useNavigate();
   const [inputs, setInputs] = useState(initialInputs);
   const handleRegister = useCallback(
     async (e) => {
       e.preventDefault();
 
       try {
-        const { data } = await API.post("/auth/register", inputs);
-        console.log(data);
+        const { data: payload } = await API.post("/auth/register", inputs);
+        dispatch({ type: ACTIONS.REGISTER, payload });
       } catch (error) {
         console.log(error.response.data || error.message);
       }
     },
-    [inputs]
+    [inputs, dispatch]
   );
 
   const cleanInputs = () => setInputs(() => initialInputs);

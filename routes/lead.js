@@ -1,50 +1,40 @@
 import { Router } from "express";
-import { Lead } from "../models/leadTable.js";
+import * as leadCtrl from "../controllers/leadCtrl.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import {
-  leadUpdateValidator,
-  leadValidator,
+  validateLeadBody,
+  validateLeadUpdateBody,
+  validateLeadStatus,
 } from "../middleware/validators.js";
+import { LeadStatus } from "../models/leadStatus.js";
+import { Lead } from "../models/leadTable.js";
+import { Op } from "sequelize";
 export const lead = Router();
-lead.post("/", async (req, res) => {
+
+lead.get("/", requireAuth, leadCtrl.getAllLeads);
+
+lead.post("/", validateLeadBody, leadCtrl.createLead);
+lead.post(
+  "/status",
+  requireAuth,
+  validateLeadStatus,
+  leadCtrl.findOrCreateLeadStatus
+);
+lead.patch("/status", requireAuth, validateLeadStatus, async (req, res) => {
   try {
-    const validator = leadValidator(req.body);
-    if (!validator.validate()) {
-      const errorsObj = validator.errors().all();
-      const message = Object.values(errorsObj).flat().join("\n");
-      throw { message };
+    const { status_id, status_name } = req.body;
+    const statusToUpdate = await LeadStatus.findOne({ where: { status_id } });
+    if (!statusToUpdate) {
+      throw {
+        status: 404,
+        message: `Status with id ${status_id} does not exist`,
+      };
     }
-    const lead = await Lead.create(req.body);
-    res.status(201).json(lead);
+    const result = await statusToUpdate.update({ status_name });
+    res.status(200).json(result);
   } catch (error) {
-    console.log(error);
-    return res.status(409).send(error.message);
+    res.status(error.status || 400).send(error.message);
   }
 });
-lead.patch("/:id", requireAuth, async (req, res) => {
-  try {
-    const validator = leadUpdateValidator(req.body);
-    if (!validator.validate()) {
-      const errorsObj = validator.errors().all();
-      const message = Object.values(errorsObj).flat().join("\n");
-      throw { message };
-    }
-    const { id } = req.params;
-    const lead = await Lead.findByPk(id);
-    if (!lead) {
-      throw new Error(`Lead wit id ${id} does not exist.`);
-    }
-    await lead.update(req.body);
-    res.status(206).json(lead);
-  } catch (error) {
-    return res.status(409).send(error.message);
-  }
-});
-lead.delete("/:id", requireAuth, async (req, res) => {
-  const { id } = req.params;
-  const result = await Lead.destroy({ where: { id } });
-  if (result === 0) {
-    return res.status(404).send(`No lead with id ${id} exists to delete`);
-  }
-  res.status(200).send(`Lead with id ${id} was successfully deleted.`);
-});
+lead.patch("/:id", requireAuth, validateLeadUpdateBody, leadCtrl.updateLead);
+lead.delete("/:id", requireAuth, leadCtrl.deleteLead);
