@@ -19,7 +19,9 @@ export const Register = (props) => {
       try {
         const { data } = await API.post("/auth/register", inputs);
         console.log(data);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error.response.data || error.message);
+      }
     },
     [inputs]
   );

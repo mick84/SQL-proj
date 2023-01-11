@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { Lead } from "../models/leadTable.js";
-import { leadUpdateValidator, leadValidator } from "../utils/validators.js";
+import { requireAuth } from "../middleware/requireAuth.js";
+import {
+  leadUpdateValidator,
+  leadValidator,
+} from "../middleware/validators.js";
 export const lead = Router();
 lead.post("/", async (req, res) => {
   try {
@@ -13,10 +17,11 @@ lead.post("/", async (req, res) => {
     const lead = await Lead.create(req.body);
     res.status(201).json(lead);
   } catch (error) {
+    console.log(error);
     return res.status(409).send(error.message);
   }
 });
-lead.patch("/:id", async (req, res) => {
+lead.patch("/:id", requireAuth, async (req, res) => {
   try {
     const validator = leadUpdateValidator(req.body);
     if (!validator.validate()) {
@@ -24,7 +29,6 @@ lead.patch("/:id", async (req, res) => {
       const message = Object.values(errorsObj).flat().join("\n");
       throw { message };
     }
-
     const { id } = req.params;
     const lead = await Lead.findByPk(id);
     if (!lead) {
@@ -36,10 +40,10 @@ lead.patch("/:id", async (req, res) => {
     return res.status(409).send(error.message);
   }
 });
-lead.delete("/:id", async (req, res) => {
+lead.delete("/:id", requireAuth, async (req, res) => {
   const { id } = req.params;
-  const lead = await Lead.destroy({ where: { id } });
-  if (lead === 0) {
+  const result = await Lead.destroy({ where: { id } });
+  if (result === 0) {
     return res.status(404).send(`No lead with id ${id} exists to delete`);
   }
   res.status(200).send(`Lead with id ${id} was successfully deleted.`);

@@ -1,8 +1,8 @@
 import page from "./page.module.scss";
 import form from "./form.module.scss";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { API } from "../misc/api";
 
-import { useCallback } from "react";
 export const Home = (props) => {
   const initialInputs = {
     name: "",
@@ -12,19 +12,27 @@ export const Home = (props) => {
     location: "",
   };
   const [inputs, setInputs] = useState(initialInputs);
+  const clearInputs = () => setInputs(() => initialInputs);
   const handleInput = useCallback(
     ({ target: { name, value } }) =>
       setInputs((i) => ({ ...i, [name]: value })),
     []
   );
-  const handleSubmit = useCallback(async (e) => {
-    try {
-      e.preventDefault();
-    } catch (error) {}
-  }, []);
+  const handleSubmit = useCallback(
+    async (e) => {
+      try {
+        e.preventDefault();
+        const { data } = await API.post("/lead", inputs);
+        console.log(data);
+      } catch (error) {
+        console.log(error.response.data || error.message);
+      }
+    },
+    [inputs]
+  );
   return (
     <div className={page.page}>
-      <form className={form.form}>
+      <form className={form.form} onSubmit={handleSubmit} onReset={clearInputs}>
         <div className={form["form-control"]}>
           <label htmlFor="name">Name:</label>
           <input
@@ -80,6 +88,15 @@ export const Home = (props) => {
             value={inputs.location}
             onChange={handleInput}
           />
+        </div>
+        <div className={form.buttons}>
+          <button type="reset">Clear</button>
+          <button
+            type="submit"
+            disabled={inputs.password !== inputs.repeatPassword}
+          >
+            Submit
+          </button>
         </div>
       </form>
     </div>

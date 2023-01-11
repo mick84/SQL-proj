@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { User } from "../models/user.js";
 import jwt from "jsonwebtoken";
-import { requireAuth } from "../utils/requireAuth.js";
-import { authValidator } from "../utils/validators.js";
+import { requireAuth } from "../middleware/requireAuth.js";
+import { authValidator } from "../middleware/validators.js";
 import { createToken } from "../utils/jwt.js";
 export const auth = Router();
 
@@ -57,12 +57,12 @@ auth.get("/logout", async (req, res) => {
 });
 auth.post("/login", async (req, res) => {
   try {
-    /*
     const validator = authValidator(req.body);
     if (!validator.validate()) {
-      throw { message: validator.errors().all() };
+      const errorsObj = validator.errors().all();
+      const message = Object.values(errorsObj).flat().join("\n");
+      throw { message };
     }
-    */
     const { email, password } = req.body;
     const user = await User.login(email, password);
     req.userID = user.uid;
