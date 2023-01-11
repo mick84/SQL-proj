@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  .lead {
+    display: grid;
+    padding: 0.5rem;
+    grid-template-columns: 2fr 3fr 3fr 2fr 4fr 2fr 2fr;
+    align-content: stretch;
+    &:nth-of-type(even) {
+      background-color: antiquewhite;
+    }
+    align-items: stretch;
+    grid-gap: 1rem;
+    border-bottom: 1px solid gray;
+    // display: flex;
+
+    //gap: 1rem;
+    color: gray;
+    font-size: large;
+
+    .field {
+      font-style: italic;
+    }
+    .name {
+      grid-column: 1;
+    }
+    .phone {
+      grid-column: 2;
+    }
+    .email {
+      grid-column: 3;
+    }
+
+    .date {
+      grid-column: 4;
+    }
+    .location {
+      grid-column: 5;
+    }
+    .status {
+      grid-column: 6;
+    }
+    .button {
+      grid-column: 7;
+    }
+  }
+}

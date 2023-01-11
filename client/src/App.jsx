@@ -5,7 +5,7 @@ import { useAuth } from "./context/UserCtx";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
-
+import { LeadsPage } from "./pages/LeadsPage";
 function App() {
   const { state, dispatch } = useAuth();
 
@@ -18,6 +18,10 @@ function App() {
         <Route
           path="auth/register"
           element={state.user ? <Navigate to="/" replace /> : <Register />}
+        />
+        <Route
+          path="/leads"
+          element={state.user ? <LeadsPage /> : <Navigate to="/" replace />}
         />
         <Route
           path="auth/login"

@@ -25,7 +25,7 @@ export const Nav = (props) => {
       <Link className={style.logo} to="/">
         My company
       </Link>
-
+      {state.user && <NavLink to={"/leads"}>See leads</NavLink>}
       <ul className={style.auth}>
         {state.user ? (
           <button type="reset" onClick={logOut}>
