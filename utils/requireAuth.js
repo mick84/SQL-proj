@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
-import { Op } from "sequelize";
 export const requireAuth = async (req, res, next) => {
   //verify authentication
   const { authorization } = req.headers;
@@ -9,7 +8,7 @@ export const requireAuth = async (req, res, next) => {
 
   const [_, token] = authorization.split(" ");
   try {
-    const uid = jwt.verify(token, process.env.JWT_SECRET);
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
     req.uid = await User.findOne({ where: { uid } });
 
     next();

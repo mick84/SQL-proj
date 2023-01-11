@@ -1,6 +1,5 @@
 import sequelize from "../utils/db.js";
 import { DataTypes, Model } from "sequelize";
-
 export class Lead extends Model {}
 Lead.init(
   {

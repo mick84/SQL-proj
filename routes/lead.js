@@ -40,7 +40,7 @@ lead.delete("/:id", async (req, res) => {
   const { id } = req.params;
   const lead = await Lead.destroy({ where: { id } });
   if (lead === 0) {
-    throw new Error(`No lead with id ${id} exists to delete`);
+    return res.status(404).send(`No lead with id ${id} exists to delete`);
   }
-  res.status(200).send(`Lead ith id ${id} was successfully deleted.`);
+  res.status(200).send(`Lead with id ${id} was successfully deleted.`);
 });
